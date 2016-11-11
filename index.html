@@ -16,6 +16,21 @@
     <div class="container" id="react-app"></div>
   </body>
 
+  <!-- Hack caz i'm lazy -->
+  <script type=text/javascript>
+    var DOM = ReactDOM
+    var ReactComponent = React.createClass
+    var ReactElement = React.createElement
+  </script>
+
+  <!-- This is just going over board -->
+  <script type='text/javascript'>
+    var h5 = ReactComponent({
+      propTypes: { value: React.PropTypes.string.isRequired, css_class: React.PropTypes.string, id: React.PropTypes.string },
+      render: function() { return( ReactElement('h1',{className: this.props.css_class, id: this.props.id },this.props.value) ) },
+    })
+  </script>
+
   <!-- This is going to render one individual component (one contact) -->
   <script type="text/javascript">
     //This is a react component.
@@ -24,7 +39,7 @@
     //     Which takes in an object with two keys.
     //      a) propTypes (The values that can be passed to them, in this case it is an object)
     //      b) render (This is a function which returns the actual html for this component.)
-    var ContactItem = React.createClass({
+    var ContactItem = ReactComponent({
       //From the given object, we take only the name, email and description and we say we want the name and email to be present
       propTypes: {
         name: React.PropTypes.string.isRequired,
@@ -34,11 +49,11 @@
       render: function() {
         //This is the actual HTML that is returned. NOTE the nesting. And the access of elements from propTypes.
         return (
-          React.createElement('div', {className: 'row col-xs-12'},
-            React.createElement('h5',{className: 'text-success'},this.props.name),
-            React.createElement('a', {className: 'text-danger',href: 'mailto:' + this.props.email},this.props.email),
-            React.createElement('h6', {className: 'text-muted'},this.props.description),
-            React.createElement("hr",{className: 'text-danger'})
+          ReactElement('div', {className: 'row col-xs-12'},
+            ReactElement('h5',{className: 'text-success'},this.props.name),
+            ReactElement('a', {className: 'text-danger',href: 'mailto:' + this.props.email},this.props.email),
+            ReactElement('h6',{className: 'text-muted'},this.props.description),
+            ReactElement("hr",{className: 'text-danger'})
           )
         )
       },
@@ -47,20 +62,20 @@
 
   <!--This is to set a list of contacts -->
   <script type="text/javascript">
-    var ContactView = React.createClass({
+    var ContactView = ReactComponent({
       propTypes: {
         contacts: React.PropTypes.array.isRequired,
       },
       render: function() {
         var contactElement = this.props.contacts
           .map(function(contact) {
-            return React.createElement(ContactItem,contact)
+            return ReactElement(ContactItem,contact)
           })
         return (
-          React.createElement("div",{className: 'row col-xs-12'},
-            React.createElement("h2",{className: 'text-primary'}, "Contacts"),
-            React.createElement("hr",{className: 'text-muted'}),
-            React.createElement("div",{},contactElement)
+          ReactElement("div",{className: 'row col-xs-12'},
+            ReactElement(h5,{value: 'Contacts',css_class: "text-primary",id: 'test'}),
+            ReactElement("hr",{className: 'text-muted'}),
+            ReactElement("div",{},contactElement)
           )
         )
       },
@@ -75,9 +90,22 @@
     ]
 
     //ReactDom render takes in two options 1. the component, 2. the place where it has to render.
-    ReactDOM.render(
+    DOM.render(
         //Here we are just calling our contact-item component by passing it the contact object
-        React.createElement(ContactView,{ contacts: contacts }), document.getElementById('react-app')
+        ReactElement(ContactView,{ contacts: contacts }), document.getElementById('react-app')
     )
   </script>
 </html>
+
+
+
+<!-- NOTE: 
+  DOM is ReactDOM
+  ReactComponent = React.createClass
+  ReactElement = React.createElement
+
+  This just makes it easier to access things.
+
+  var h1 = ReactElement('h1',{className: 'blue-header'})
+  DOM.render(ReactElemnt(h1),document.getElementByid('react-app'))
+-->
